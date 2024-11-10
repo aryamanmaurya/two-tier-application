@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+  app:
+    image: aryamansam/two-tier-application:v1.0
+    container_name: two-tier-application
+    environment:
+      DB_HOST: db-server  # Match this with the variable in your code
+      DB_USER: appUser
+      DB_PASSWORD: appUser@123
+      DB_NAME: appData
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db-server
+    networks:
+      - two-tier-network
+
+  db-server:
+    image: mysql:8
+    container_name: mysql-server-container
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_USER: appUser
+      MYSQL_PASSWORD: appUser@123
+      MYSQL_DATABASE: appData
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql-data:/var/lib/mysql
+    networks:
+      - two-tier-network
+
+networks:
+  two-tier-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local
