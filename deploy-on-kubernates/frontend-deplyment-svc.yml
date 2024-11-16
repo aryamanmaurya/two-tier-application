@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata: 
+  name: two-tier-deployment-svc
+
+spec:
+  selector: 
+    app: frontend
+  ports: 
+    - protocol: TCP
+      port: 5000            # Port exposed by the service
+      targetPort: 5000      # Port on the container
+      nodePort: 30007       # Optinal: specify the nodeport; otherwise Kubernetes assigns one automatically.
+  type: NodePort            # Expose the service externally on each node's ip  and the specified NodePort.
